@@ -36,11 +36,9 @@ const getUser = async (req, res) => {
 const createUser = async (req, res) => {
   try {
     const { name, avatar } = req.body;
-    console.log("Request Body:", req.body);
 
     // Create a new user using async/await
     const user = await User.create({ name, avatar });
-    console.log("Created User:", user);
 
     // Send the created user as a response
     return res.status(201).send(user);

@@ -16,7 +16,14 @@ const createItem = async (req, res) => {
   try {
     const { name, imageUrl, weather } = req.body;
 
-    const item = await ClothingItem.create({ name, imageUrl, weather });
+    // Add the owner field to the item being created
+    const item = await ClothingItem.create({
+      name,
+      imageUrl,
+      weather,
+      owner: req.user._id, // Add the owner's ID from the request object
+    });
+
     return res.status(201).send(item);
   } catch (err) {
     console.error(err);
