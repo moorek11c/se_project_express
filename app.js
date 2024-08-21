@@ -3,10 +3,17 @@ const express = require("express");
 
 const mongoose = require("mongoose");
 
+const { PORT = 3001 } = process.env;
+
 const app = express();
 
+const indexRoutes = require("./routes/index");
+
 mongoose
-  .connect("mongodb://127.0.0.1:27017/wtwr_db")
+  .connect("mongodb://127.0.0.1:27017/wtwr_db", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
     console.log("Connected to database!");
   })
@@ -14,7 +21,9 @@ mongoose
     console.log("Connection failed!");
   });
 
-const { PORT = 3001 } = process.env;
+app.use(express.json());
+
+app.use("/", indexRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
