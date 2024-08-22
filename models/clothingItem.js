@@ -5,8 +5,8 @@ const clothingItemSchema = mongoose.Schema({
   name: {
     required: true,
     type: String,
-    minlength: 2,
-    maxlength: 30,
+    minlength: [2, "The name field must be at least 2 characters long"],
+    maxlength: [30, "The name field must be at most 30 characters long"],
   },
   weather: {
     required: true,
@@ -28,9 +28,11 @@ const clothingItemSchema = mongoose.Schema({
     required: true,
   },
   likes: {
-    type: Number,
-    default: 0,
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "User",
+    default: [],
   },
+
   createdAt: {
     type: Date,
     default: Date.now,

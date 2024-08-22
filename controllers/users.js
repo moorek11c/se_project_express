@@ -1,58 +1,43 @@
 const User = require("../models/user");
+const asyncHandler = require("../utils/asyncHandler");
+const BadRequestError = require("../utils/errorTypes/BadRequestError");
+const NotFoundError = require("../utils/errorTypes/NotFoundError");
+const { ERROR_MESSAGES } = require("../utils/errors");
 
-// get /users
+// get all /users
 
-// Get all users
-const getUsers = async (req, res) => {
-  try {
-    const users = await User.find({});
-    res.status(200).send(users);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({ message: err.message });
+const getUsers = asyncHandler(async (req, res) => {
+  const users = await User.find({});
+  res.status(200).send(users);
+});
+
+// get /user by id
+
+const getUser = asyncHandler(async (req, res) => {
+  const { _id } = req.params;
+
+  const user = await User.findById(_id).orFail(
+    new NotFoundError(ERROR_MESSAGES.USER_NOT_FOUND)
+  );
+
+  return res.status(200).send(user);
+});
+
+// create a user
+
+const createUser = asyncHandler(async (req, res, next) => {
+  const { name, avatar } = req.body;
+
+  if (!name || name.length < 2) {
+    return next(new BadRequestError());
   }
-};
 
-const getUser = async (req, res) => {
-  try {
-    const { _id } = req.params;
-
-    // Await the result of the asynchronous operation
-    const user = await User.findById(_id);
-
-    if (!user) {
-      // Handle case where user is not found
-      return res.status(404).send({ message: "User not found" });
-    }
-
-    // Send the found user as the response
-    return res.status(200).send(user);
-  } catch (err) {
-    // Handle any errors that occur
-    console.error(err);
-    return res.status(500).send({ message: err.message });
+  if (!avatar || avatar.length > 30) {
+    return next(new BadRequestError());
   }
-};
-const createUser = async (req, res) => {
-  try {
-    const { name, avatar } = req.body;
 
-    // Create a new user using async/await
-    const user = await User.create({ name, avatar });
+  const user = await User.create({ name, avatar });
 
-    // Send the created user as a response
-    return res.status(201).send(user);
-  } catch (err) {
-    console.error(err);
-
-    // Handle validation errors
-    if (err.name === "ValidationError") {
-      return res.status(400).send({ message: err.message });
-    }
-
-    // Handle other types of errors
-    return res.status(500).send({ message: err.message });
-  }
-};
-
+  return res.status(201).send(user);
+});
 module.exports = { getUsers, createUser, getUser };
