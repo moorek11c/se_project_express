@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-console */
 const express = require("express");
 const mongoose = require("mongoose");
 
@@ -7,7 +5,12 @@ const { PORT = 3001 } = process.env;
 const app = express();
 const indexRoutes = require("./routes/index");
 
-const { errorHandler } = require("./utils/errors");
+const {
+  errorHandler,
+  ERROR_CODES,
+  ERROR_MESSAGES,
+  CustomError,
+} = require("./utils/errors");
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db", {
@@ -31,6 +34,10 @@ app.use((req, res, next) => {
 });
 
 app.use("/", indexRoutes);
+
+app.use((req, res, next) => {
+  next(new CustomError(ERROR_MESSAGES.INVALID_ROUTER, ERROR_CODES.NOT_FOUND));
+});
 
 app.use(errorHandler);
 

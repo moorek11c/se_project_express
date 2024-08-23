@@ -12,6 +12,7 @@ const ERROR_MESSAGES = {
   USER_NOT_FOUND: "No user found with the given ID.",
   INVALID_DATA: "Invalid data provided.",
   INVALID_ID: "Invalid ID provided.",
+  INVALID_ROUTER: "Invalid Router provided.",
 };
 
 class CustomError extends Error {

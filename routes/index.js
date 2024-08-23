@@ -14,8 +14,4 @@ router.use("/items", clothingRoutes);
 // Likes
 router.use("/items", likesRoutes);
 
-router.use((req, res) => {
-  res.status(500).send({ message: "router not found" });
-});
-
 module.exports = router;
