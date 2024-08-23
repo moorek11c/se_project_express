@@ -9,18 +9,14 @@ const clothingItemSchema = mongoose.Schema({
     maxlength: [30, "The name field must be at most 30 characters long"],
   },
   weather: {
-    required: true,
+    required: [true, "The weather field is required"],
     type: String,
     enum: ["hot", "warm", "cold"],
   },
   imageUrl: {
     required: [true, "The imageUrl field is required"],
     type: String,
-    validate: {
-      validator(value) {
-        return validator.isURL(value);
-      },
-    },
+    validate: [validator.isURL, "The imageUrl field must be a valid URL"],
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

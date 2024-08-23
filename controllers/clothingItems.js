@@ -1,44 +1,49 @@
 const ClothingItem = require("../models/clothingItem");
-const asyncHandler = require("../utils/asyncHandler");
-const BadRequestError = require("../utils/errorTypes/BadRequestError");
-const NotFoundError = require("../utils/errorTypes/NotFoundError");
+const mongoose = require("mongoose");
+const { CustomError, ERROR_CODES, ERROR_MESSAGES } = require("../utils/errors");
 
 // get all clothing items
 
-const getItems = asyncHandler(async (req, res) => {
-  const items = await ClothingItem.find({});
+const getItems = async (req, res, next) => {
+  try {
+    const items = await ClothingItem.find({});
+    res.status(200).send(items);
+  } catch (error) {
+    next(
+      new CustomError(ERROR_MESSAGES.SERVER_ERROR, ERROR_CODES.SERVER_ERROR)
+    );
+  }
+};
 
-  res.status(200).send(items);
-});
-
-const createItem = asyncHandler(async (req, res, next) => {
+const createItem = async (req, res, next) => {
   const { name, imageUrl, weather } = req.body;
-  if (!name || !imageUrl || !weather) {
-    return next(new BadRequestError());
+  const owner = req.user._id;
+  try {
+    const item = await ClothingItem.create({ name, imageUrl, weather, owner });
+    return res.status(201).json(item);
+  } catch (error) {
+    next(error);
   }
+};
 
-  // Add the owner field to the item being created
-  const item = await ClothingItem.create({
-    name,
-    imageUrl,
-    weather,
-    // eslint-disable-next-line no-underscore-dangle
-    owner: req.user._id,
-  });
+const deleteItem = async (req, res, next) => {
+  const { itemId } = req.params;
 
-  return res.status(201).send(item);
-});
-
-const deleteItem = asyncHandler(async (req, res, next) => {
-  const { _id } = req.params;
-
-  const item = await ClothingItem.findByIdAndDelete(_id);
-
-  if (!item) {
-    return next(new NotFoundError());
+  try {
+    if (!mongoose.Types.ObjectId.isValid(itemId)) {
+      throw new CustomError(ERROR_MESSAGES.INVALID_ID, ERROR_CODES.BAD_REQUEST);
+    }
+    const item = await ClothingItem.findByIdAndDelete(itemId);
+    if (!item) {
+      throw new CustomError(
+        ERROR_MESSAGES.ITEM_NOT_FOUND,
+        ERROR_CODES.NOT_FOUND
+      );
+    }
+    return res.status(200).json({ message: "Item successfully deleted" });
+  } catch (error) {
+    next(error);
   }
-
-  return res.status(200).send({ message: "Item deleted successfully" });
-});
+};
 
 module.exports = { getItems, createItem, deleteItem };

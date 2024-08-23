@@ -1,37 +1,66 @@
-const asyncHandler = require("../utils/asyncHandler");
 const ClothingItem = require("../models/clothingItem");
-const NotFoundError = require("../utils/errorTypes/NotFoundError");
+const mongoose = require("mongoose");
+const { CustomError, ERROR_CODES, ERROR_MESSAGES } = require("../utils/errors");
 
 // Like an item
 
-const putLikes = asyncHandler(async (req, res) => {
-  const item = await ClothingItem.findByIdAndUpdate(
-    req.params.itemId,
-    { $addToSet: { likes: req.user._id } },
-    { new: true }
-  );
+const putLikes = async (req, res, next) => {
+  const { itemId } = req.params;
 
-  if (!item) {
-    throw new NotFoundError();
+  if (!mongoose.Types.ObjectId.isValid(itemId)) {
+    return next(
+      new CustomError(ERROR_MESSAGES.INVALID_ID, ERROR_CODES.BAD_REQUEST)
+    );
   }
 
-  res.status(200).send(item);
-});
+  try {
+    const item = await ClothingItem.findByIdAndUpdate(
+      itemId,
+      { $addToSet: { likes: req.user._id } },
+      { new: true }
+    );
 
-// Unlike an item
+    if (!item) {
+      return next(
+        new CustomError(ERROR_MESSAGES.ITEM_NOT_FOUND, ERROR_CODES.NOT_FOUND)
+      );
+    }
 
-const deleteLikes = asyncHandler(async (req, res) => {
-  const item = await ClothingItem.findByIdAndUpdate(
-    req.params.itemId,
-    { $pull: { likes: req.user._id } },
-    { new: true }
-  );
+    return res.status(200).json(item);
+  } catch (error) {
+    return next(
+      new CustomError(ERROR_MESSAGES.SERVER_ERROR, ERROR_CODES.SERVER_ERROR)
+    );
+  }
+};
 
-  if (!item) {
-    throw new NotFoundError();
+const deleteLikes = async (req, res, next) => {
+  const { itemId } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(itemId)) {
+    return next(
+      new CustomError(ERROR_MESSAGES.INVALID_ID, ERROR_CODES.BAD_REQUEST)
+    );
   }
 
-  res.status(200).send(item);
-});
+  try {
+    const item = await ClothingItem.findByIdAndUpdate(
+      itemId,
+      { $pull: { likes: req.user._id } },
+      { new: true }
+    );
+
+    if (!item) {
+      return next(
+        new CustomError(ERROR_MESSAGES.ITEM_NOT_FOUND, ERROR_CODES.NOT_FOUND)
+      );
+    }
+
+    return res.status(200).json(item);
+  } catch (error) {
+    return next(
+      new CustomError(ERROR_MESSAGES.SERVER_ERROR, ERROR_CODES.SERVER_ERROR)
+    );
+  }
+};
 
 module.exports = { putLikes, deleteLikes };

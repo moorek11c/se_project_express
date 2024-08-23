@@ -21,7 +21,7 @@ module.exports = {
     sourceType: "module",
   },
   rules: {
-    "no-underscore-dangle": ["error", { allow: ["_place", "_id"] }],
-    "no-console": "off", // Allow all console logs
+    "no-underscore-dangle": "off",
+    "no-console": ["warn", { allow: ["error"] }],
   },
 };

@@ -8,6 +8,6 @@ router.get("/", clothingController.getItems);
 router.post("/", clothingController.createItem);
 
 // delete a item
-router.delete("/:_id", clothingController.deleteItem);
+router.delete("/:itemId", clothingController.deleteItem);
 
 module.exports = router;
