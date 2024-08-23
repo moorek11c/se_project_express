@@ -13,12 +13,14 @@ const getUsers = asyncHandler(async (req, res) => {
 
 // get /user by id
 
-const getUser = asyncHandler(async (req, res) => {
+const getUser = asyncHandler(async (req, res, next) => {
   const { _id } = req.params;
 
-  const user = await User.findById(_id).orFail(
-    new NotFoundError(ERROR_MESSAGES.USER_NOT_FOUND)
-  );
+  const user = await User.findById(_id);
+
+  if (!user) {
+    return next(new NotFoundError(ERROR_MESSAGES.USER_NOT_FOUND));
+  }
 
   return res.status(200).send(user);
 });

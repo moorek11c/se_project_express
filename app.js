@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const { PORT = 3001 } = process.env;
 const app = express();
 const indexRoutes = require("./routes/index");
-const { ERROR_CODES, ERROR_MESSAGES } = require("./utils/errors");
+const errorHandler = require("./utils/errorTypes/errorHandler");
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db", {
@@ -31,12 +31,7 @@ app.use((req, res, next) => {
 
 app.use("/", indexRoutes);
 
-app.use((err, req, res, next) => {
-  const statusCode = err.statusCode || ERROR_CODES.SERVER_ERROR;
-  const message = err.message || ERROR_MESSAGES.SERVER_ERROR;
-  console.error(err.stack);
-  res.status(statusCode).send({ message });
-});
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

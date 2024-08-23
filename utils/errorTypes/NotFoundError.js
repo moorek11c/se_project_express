@@ -5,7 +5,7 @@ class NotFoundError extends Error {
     message = ERROR_MESSAGES.ITEM_NOT_FOUND || ERROR_MESSAGES.USER_NOT_FOUND
   ) {
     super(message);
-    this.statusCode = ERROR_CODES.NOT_FOUND;
+    this.statusCode = 404;
   }
 }
 
