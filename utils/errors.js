@@ -39,6 +39,7 @@ function errorHandler(err, req, res, next) {
   } else if (err.name === "CastError") {
     statusCode = ERROR_CODES.BAD_REQUEST;
     message = ERROR_MESSAGES.INVALID_ID;
+    next();
   }
 
   res.status(statusCode).json({ message });

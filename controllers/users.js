@@ -1,4 +1,3 @@
-const { default: isURL } = require("validator/lib/isURL");
 const mongoose = require("mongoose");
 const User = require("../models/user");
 const { CustomError, ERROR_CODES, ERROR_MESSAGES } = require("../utils/errors");
@@ -37,8 +36,8 @@ const getUser = async (req, res, next) => {
 
     return res.status(200).json(user);
   } catch (error) {
-    console.error("Error in getUser:", error); // Log error
-    next(error); // Pass the error to the global error handler
+    console.error("Error in getUser:", error);
+    return next(error);
   }
 };
 
@@ -46,12 +45,10 @@ const createUser = async (req, res, next) => {
   const { name, avatar } = req.body;
 
   try {
-    // Assuming validation is handled by Mongoose schema
-
     const user = await User.create({ name, avatar });
     return res.status(201).json(user);
   } catch (error) {
-    next(error); // Pass the error to the global error handler
+    return next(error);
   }
 };
 

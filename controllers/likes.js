@@ -1,5 +1,6 @@
-const ClothingItem = require("../models/clothingItem");
 const mongoose = require("mongoose");
+
+const ClothingItem = require("../models/clothingItem");
 const { CustomError, ERROR_CODES, ERROR_MESSAGES } = require("../utils/errors");
 
 // Like an item

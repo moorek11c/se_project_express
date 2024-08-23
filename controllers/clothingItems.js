@@ -1,5 +1,6 @@
-const ClothingItem = require("../models/clothingItem");
 const mongoose = require("mongoose");
+
+const ClothingItem = require("../models/clothingItem");
 const { CustomError, ERROR_CODES, ERROR_MESSAGES } = require("../utils/errors");
 
 // get all clothing items
@@ -22,7 +23,7 @@ const createItem = async (req, res, next) => {
     const item = await ClothingItem.create({ name, imageUrl, weather, owner });
     return res.status(201).json(item);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
@@ -42,7 +43,7 @@ const deleteItem = async (req, res, next) => {
     }
     return res.status(200).json({ message: "Item successfully deleted" });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
