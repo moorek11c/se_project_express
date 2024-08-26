@@ -1,5 +1,7 @@
 // Description: This file contains the error handling logic for the application.
 
+const { exists } = require("../models/user");
+
 const ERROR_CODES = {
   BAD_REQUEST: 400,
   NOT_FOUND: 404,
@@ -13,6 +15,7 @@ const ERROR_MESSAGES = {
   INVALID_DATA: "Invalid data provided.",
   INVALID_ID: "Invalid ID provided.",
   INVALID_ROUTER: "Invalid Router provided.",
+  EMAIL_ALREADY_EXISTS: "Email already in use",
 };
 
 class CustomError extends Error {

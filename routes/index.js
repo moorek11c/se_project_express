@@ -5,7 +5,7 @@ const likesRoutes = require("./likes");
 
 // user
 
-router.use("/users", userRoutes);
+router.use("/", userRoutes);
 
 // Clothing
 

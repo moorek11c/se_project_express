@@ -1,5 +1,10 @@
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
+
+const bcrypt = require("bcryptjs");
+
 const User = require("../models/user");
+
 const { CustomError, ERROR_CODES, ERROR_MESSAGES } = require("../utils/errors");
 
 // get all /users
@@ -42,14 +47,54 @@ const getUser = async (req, res, next) => {
 };
 
 const createUser = async (req, res, next) => {
-  const { name, avatar } = req.body;
+  const { name, avatar, email, password } = req.body;
+
+  // checks existing email
 
   try {
-    const user = await User.create({ name, avatar });
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      throw new CustomError(
+        ERROR_MESSAGES.EMAIL_ALREADY_EXISTS,
+        ERROR_CODES.BAD_REQUEST
+      );
+    }
+
+    // Hash Password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a User
+    const user = await User.create({
+      name,
+      avatar,
+      email,
+      password: hashedPassword,
+    });
     return res.status(201).json(user);
   } catch (error) {
     return next(error);
   }
 };
 
-module.exports = { getUsers, createUser, getUser };
+// log in controller
+// gets email and password from request
+// authenticates them
+// uses User.findUserByCredintials()
+
+const logIn = async (req, res, next) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findUserByCredentials(email, password);
+
+    const token = jwt.sign({ _id: user._id }, "secret", { expiresIn: "7d" });
+
+    return res.json({ token });
+  } catch (error) {
+    console.log(error);
+
+    return next(error);
+  }
+};
+
+module.exports = { getUsers, createUser, getUser, logIn };
