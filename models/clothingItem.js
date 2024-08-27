@@ -16,7 +16,15 @@ const clothingItemSchema = mongoose.Schema({
   imageUrl: {
     required: [true, "The imageUrl field is required"],
     type: String,
-    validate: [validator.isURL, "The imageUrl field must be a valid URL"],
+    validate: {
+      validator(value) {
+        return validator.isURL(value, {
+          protocols: ["http", "https"],
+          require_protocol: true,
+        });
+      },
+      message: "Invalid URL",
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

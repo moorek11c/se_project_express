@@ -6,6 +6,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 
 const { CustomError, ERROR_CODES, ERROR_MESSAGES } = require("../utils/errors");
+const { JWT_SECRET } = require("../utils/config");
 
 // get all /users
 
@@ -56,11 +57,12 @@ const createUser = async (req, res, next) => {
     if (existingUser) {
       throw new CustomError(
         ERROR_MESSAGES.EMAIL_ALREADY_EXISTS,
-        ERROR_CODES.BAD_REQUEST
+        ERROR_CODES.RESOURCE_EXISTS
       );
     }
 
     // Hash Password
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create a User
@@ -70,6 +72,9 @@ const createUser = async (req, res, next) => {
       email,
       password: hashedPassword,
     });
+
+    console.log("Saved User:", user); // Debug: Log saved user
+
     return res.status(201).json(user);
   } catch (error) {
     return next(error);
@@ -87,14 +92,72 @@ const logIn = async (req, res, next) => {
   try {
     const user = await User.findUserByCredentials(email, password);
 
-    const token = jwt.sign({ _id: user._id }, "secret", { expiresIn: "7d" });
+    const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: "7d" });
 
-    return res.json({ token });
+    return res.status(200).json({ token });
   } catch (error) {
-    console.log(error);
+    console.error("Login error:", error);
+    if (error instanceof CustomError) {
+      return next(error);
+    }
 
+    return res.status(500).json({ message: "Server Error" });
+  }
+};
+
+const getCurrentUser = async (req, res, next) => {
+  const { _id } = req.user;
+
+  try {
+    const user = await User.findById(_id).populate("clothingItems");
+
+    if (!user) {
+      throw new CustomError(
+        ERROR_MESSAGES.USER_NOT_FOUND,
+        ERROR_CODES.NOT_FOUND
+      );
+    }
+
+    return res.status(200).json(user);
+  } catch (error) {
+    console.error("Error in getCurrentUser:", error);
     return next(error);
   }
 };
 
-module.exports = { getUsers, createUser, getUser, logIn };
+const updateUser = async (req, res, next) => {
+  const { _id } = req.user;
+  const { name, avatar, email, password } = req.body;
+
+  try {
+    if (!mongoose.isValidObjectId(_id)) {
+      throw new CustomError(ERROR_MESSAGES.INVALID_ID, ERROR_CODES.BAD_REQUEST);
+    }
+
+    const user = await User.findByIdAndUpdate(
+      _id,
+      { name, avatar, email, password },
+      { new: true }
+    );
+
+    if (!user) {
+      throw new CustomError(
+        ERROR_MESSAGES.USER_NOT_FOUND,
+        ERROR_CODES.NOT_FOUND
+      );
+    }
+
+    return res.status(200).json(user);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+module.exports = {
+  getUsers,
+  createUser,
+  getUser,
+  logIn,
+  getCurrentUser,
+  updateUser,
+};

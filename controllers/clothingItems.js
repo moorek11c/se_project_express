@@ -29,6 +29,7 @@ const createItem = async (req, res, next) => {
 
 const deleteItem = async (req, res, next) => {
   const { itemId } = req.params;
+  const userId = req.user._id;
 
   try {
     if (!mongoose.Types.ObjectId.isValid(itemId)) {
@@ -41,6 +42,11 @@ const deleteItem = async (req, res, next) => {
         ERROR_CODES.NOT_FOUND
       );
     }
+
+    if (item.owner.toString() !== userId.toString()) {
+      throw new CustomError(ERROR_MESSAGES.FORBIDDEN, ERROR_CODES.FORBIDDEN);
+    }
+
     return res.status(200).json({ message: "Item successfully deleted" });
   } catch (error) {
     return next(error);

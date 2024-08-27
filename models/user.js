@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
+const { CustomError } = require("../utils/errors");
+const { ERROR_CODES, ERROR_MESSAGES } = require("../utils/errors");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -26,13 +28,18 @@ const userSchema = new mongoose.Schema({
       validator(value) {
         return validator.isEmail(value);
       },
+      message: "Invalid email",
     },
   },
   password: {
     type: String,
     required: true,
     minlength: 8,
+    select: false,
   },
+  clothingItems: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "ClothingItem" },
+  ],
 });
 
 userSchema.statics.findUserByCredentials = async function findUserByCredentials(
@@ -40,14 +47,22 @@ userSchema.statics.findUserByCredentials = async function findUserByCredentials(
   password
 ) {
   try {
-    const user = await this.findOne({ email });
+    const user = await this.findOne({ email }).select("+password");
+
     if (!user) {
-      throw new Error("Incorrect email or password");
+      throw new CustomError(
+        ERROR_MESSAGES.NOT_AUTHORIZED_LOGIIN,
+        ERROR_CODES.BAD_REQUEST
+      );
     }
 
     const matched = await bcrypt.compare(password, user.password);
     if (!matched) {
-      throw new Error("Incorrect email or password");
+      console.log("password not matched");
+      throw new CustomError(
+        ERROR_MESSAGES.NOT_AUTHORIZED_LOGIIN,
+        ERROR_CODES.UNAUTHORIZED
+      );
     }
 
     return user;

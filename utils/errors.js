@@ -1,11 +1,10 @@
-// Description: This file contains the error handling logic for the application.
-
-const { exists } = require("../models/user");
-
 const ERROR_CODES = {
   BAD_REQUEST: 400,
   NOT_FOUND: 404,
   SERVER_ERROR: 500,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  RESOURCE_EXISTS: 409,
 };
 
 const ERROR_MESSAGES = {
@@ -16,6 +15,8 @@ const ERROR_MESSAGES = {
   INVALID_ID: "Invalid ID provided.",
   INVALID_ROUTER: "Invalid Router provided.",
   EMAIL_ALREADY_EXISTS: "Email already in use",
+  NOT_AUTHORIZED_LOGIIN: "Incorrect email or password!",
+  FORBIDDEN: "You are not authorized to perform this action.",
 };
 
 class CustomError extends Error {
