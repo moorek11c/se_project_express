@@ -30,9 +30,6 @@ const auth = (req, res, next) => {
       ERROR_CODES.UNAUTHORIZED
     );
   }
-
-  req.user = payload;
-  return next();
 };
 
 // const auth = (req, res, next) => {
