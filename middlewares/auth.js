@@ -32,26 +32,4 @@ const auth = (req, res, next) => {
   }
 };
 
-// const auth = (req, res, next) => {
-//   const token = req.header("Authorization");
-
-//   if (!token) {
-//     throw new CustomError(
-//       ERROR_MESSAGES.NOT_AUTHORIZED_LOGIIN,
-//       ERROR_CODES.UNAUTHORIZED
-//     );
-//   }
-
-//   try {
-//     const decoded = jwt.verify(token, JWT_SECRET);
-//     req.user = decoded.user;
-//     next();
-//   } catch (error) {
-//     throw new CustomError(
-//       ERROR_MESSAGES.NOT_AUTHORIZED_LOGIIN,
-//       ERROR_CODES.UNAUTHORIZED
-//     );
-//   }
-// };
-
 module.exports = auth;

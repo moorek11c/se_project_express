@@ -34,7 +34,6 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minlength: 8,
     select: false,
   },
   clothingItems: [
@@ -52,7 +51,7 @@ userSchema.statics.findUserByCredentials = async function findUserByCredentials(
     if (!user) {
       throw new CustomError(
         ERROR_MESSAGES.NOT_AUTHORIZED_LOGIIN,
-        ERROR_CODES.BAD_REQUEST
+        ERROR_CODES.UNAUTHORIZED
       );
     }
 

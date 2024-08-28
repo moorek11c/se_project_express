@@ -35,7 +35,7 @@ const deleteItem = async (req, res, next) => {
     if (!mongoose.Types.ObjectId.isValid(itemId)) {
       throw new CustomError(ERROR_MESSAGES.INVALID_ID, ERROR_CODES.BAD_REQUEST);
     }
-    const item = await ClothingItem.findByIdAndDelete(itemId);
+    const item = await ClothingItem.findById(itemId);
     if (!item) {
       throw new CustomError(
         ERROR_MESSAGES.ITEM_NOT_FOUND,
@@ -47,7 +47,9 @@ const deleteItem = async (req, res, next) => {
       throw new CustomError(ERROR_MESSAGES.FORBIDDEN, ERROR_CODES.FORBIDDEN);
     }
 
-    return res.status(200).json({ message: "Item successfully deleted" });
+    await ClothingItem.deleteOne({ _id: itemId });
+
+    return res.json({ message: "Item successfully deleted" });
   } catch (error) {
     return next(error);
   }
