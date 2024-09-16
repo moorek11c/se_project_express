@@ -54,5 +54,5 @@ module.exports = {
   ERROR_CODES,
   ERROR_MESSAGES,
   CustomError,
-  errorHandler, // Export the error handler
+  errorHandler,
 };
