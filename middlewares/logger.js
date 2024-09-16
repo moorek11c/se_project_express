@@ -32,7 +32,7 @@ const requestLogger = expressWinston.logger({
 const errorLogger = expressWinston.errorLogger({
   // write error logs to a seperate error.log file
   transports: [new winston.transports.File({ filename: "error.log" })],
-  format: winston.format.json,
+  format: winston.format.json(),
 });
 
 module.exports = {

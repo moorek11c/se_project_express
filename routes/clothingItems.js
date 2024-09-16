@@ -3,6 +3,7 @@ const { celebrate } = require("celebrate");
 const { createItemSchema } = require("../middlewares/validationSchemas");
 const clothingController = require("../controllers/clothingItems");
 const auth = require("../middlewares/auth");
+const { validateId } = require("../middlewares/validationSchemas");
 
 // find all items
 router.get("/", clothingController.getItems);
@@ -16,6 +17,6 @@ router.post(
 );
 
 // delete a item
-router.delete("/:itemId", auth, clothingController.deleteItem);
+router.delete("/:itemId", auth, validateId, clothingController.deleteItem);
 
 module.exports = router;

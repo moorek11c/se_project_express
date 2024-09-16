@@ -1,5 +1,8 @@
-const joi = require("joi");
+const { celebrate, Joi } = require("celebrate");
+
 const validator = require("validator");
+
+// Validate URL using Joi custom validation
 
 const validateURL = (value, helpers) => {
   if (validator.isURL(value)) {
@@ -8,26 +11,41 @@ const validateURL = (value, helpers) => {
   return helpers.error("string.uri"); // or another custom error
 };
 
-const createItemSchema = joi.object({
-  name: joi.string().min(2).max(30).required(),
-  imageUrl: joi.string().custom(validateURL).required(),
-  weather: joi.string().required(),
+// Validate IDs
+
+const validateId = celebrate({
+  params: Joi.object().keys({
+    _id: Joi.string().hex().length(24).required().messages({
+      "string.hex": 'The "id" must be a valid hexadecimal string',
+      "string.length": 'The "id" must be exactly 24 characters long',
+      "any.required": 'The "id" field is required',
+    }),
+  }),
 });
 
-const createUserSchema = joi.object({
-  name: joi.string().min(2).max(30).required(),
-  avatar: joi.string().custom(validateURL).required(),
-  email: joi.string().email().required(),
-  password: joi.string().min(6).required(),
+// Create Joi schema for item and user
+
+const createItemSchema = Joi.object({
+  name: Joi.string().min(2).max(30).required(),
+  imageUrl: Joi.string().custom(validateURL).required(),
+  weather: Joi.string().valid("hot", "warm", "cold").required(),
 });
 
-const loginUserSchema = joi.object({
-  email: joi.string().email().required(),
-  password: joi.string().min(6).required(),
+const createUserSchema = Joi.object({
+  name: Joi.string().min(2).max(30).required(),
+  avatar: Joi.string().custom(validateURL).required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
+});
+
+const loginUserSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
 });
 
 module.exports = {
   createItemSchema,
   createUserSchema,
   loginUserSchema,
+  validateId,
 };

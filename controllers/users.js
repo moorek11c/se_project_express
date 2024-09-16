@@ -78,9 +78,12 @@ const logIn = async (req, res, next) => {
       return next(error);
     }
 
-    return res
-      .status(ERROR_CODES.SERVER_ERROR)
-      .json(ERROR_MESSAGES.SERVER_ERROR);
+    return next(
+      new CustomError(
+        ERROR_MESSAGES.INVALID_CREDENTIALS,
+        ERROR_CODES.UNAUTHORIZED
+      )
+    );
   }
 };
 

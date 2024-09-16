@@ -36,9 +36,6 @@ const userSchema = new mongoose.Schema({
     required: true,
     select: false,
   },
-  clothingItems: [
-    { type: mongoose.Schema.Types.ObjectId, ref: "ClothingItem" },
-  ],
 });
 
 userSchema.statics.findUserByCredentials = async function findUserByCredentials(
