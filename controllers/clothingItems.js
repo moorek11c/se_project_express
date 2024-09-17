@@ -6,8 +6,10 @@ const { CustomError, ERROR_CODES, ERROR_MESSAGES } = require("../utils/errors");
 // get all clothing items
 
 const getItems = async (req, res, next) => {
+  const userId = req.user._id;
+
   try {
-    const items = await ClothingItem.find({});
+    const items = await ClothingItem.find({ user: userId });
     res.status(200).send(items);
   } catch (error) {
     next(
