@@ -8,14 +8,14 @@ const validateURL = (value, helpers) => {
   if (validator.isURL(value)) {
     return value;
   }
-  return helpers.error("string.uri"); // or another custom error
+  return helpers.error("string.uri");
 };
 
 // Validate IDs
 
 const validateId = celebrate({
   params: Joi.object().keys({
-    _id: Joi.string().hex().length(24).required().messages({
+    itemId: Joi.string().hex().length(24).required().messages({
       "string.hex": 'The "id" must be a valid hexadecimal string',
       "string.length": 'The "id" must be exactly 24 characters long',
       "any.required": 'The "id" field is required',
@@ -43,9 +43,15 @@ const loginUserSchema = Joi.object({
   password: Joi.string().min(6).required(),
 });
 
+const editUserSchema = Joi.object({
+  name: Joi.string().min(2).max(30).required(),
+  avatar: Joi.string().custom(validateURL).required(),
+});
+
 module.exports = {
   createItemSchema,
   createUserSchema,
   loginUserSchema,
+  editUserSchema,
   validateId,
 };

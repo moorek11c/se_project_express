@@ -87,7 +87,7 @@ const getCurrentUser = async (req, res, next) => {
   const { _id } = req.user;
 
   try {
-    const user = await User.findById(_id).populate("clothingItems");
+    const user = await User.findById(_id);
 
     if (!user) {
       throw new CustomError(
