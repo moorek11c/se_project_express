@@ -17,6 +17,6 @@ router.post(
 );
 
 // delete a item
-router.delete("/:itemId", validateId, auth, clothingController.deleteItem);
+router.delete("/:itemId", auth, validateId, clothingController.deleteItem);
 
 module.exports = router;
