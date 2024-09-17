@@ -54,11 +54,7 @@ const logIn = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
-    console.log("Email:", email, "Password:", password); // Ensure values are received
-
     const user = await User.findUserByCredentials(email, password);
-
-    console.log("Found user:", user); // Log the user data
 
     const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: "7d" });
 
