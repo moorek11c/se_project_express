@@ -8,7 +8,7 @@ const validateURL = (value, helpers) => {
   if (validator.isURL(value)) {
     return value;
   }
-  return helpers.error("string.uri"); // or another custom error
+  return helpers.error("string.uri");
 };
 
 // Validate IDs
@@ -43,9 +43,15 @@ const loginUserSchema = Joi.object({
   password: Joi.string().min(6).required(),
 });
 
+const editUserSchema = Joi.object({
+  name: Joi.string().min(2).max(30).required(),
+  avatar: Joi.string().custom(validateURL).required(),
+});
+
 module.exports = {
   createItemSchema,
   createUserSchema,
   loginUserSchema,
+  editUserSchema,
   validateId,
 };

@@ -6,6 +6,7 @@ const auth = require("../middlewares/auth");
 const {
   createUserSchema,
   loginUserSchema,
+  editUserSchema,
 } = require("../middlewares/validationSchemas");
 
 // sign-In
@@ -26,6 +27,11 @@ router.post(
 router.get("/users/me", auth, userController.getCurrentUser);
 
 // update profile
-router.patch("/users/me", auth, userController.updateUser);
+router.patch(
+  "/users/me",
+  celebrate({ body: editUserSchema }),
+  auth,
+  userController.updateUser
+);
 
 module.exports = router;

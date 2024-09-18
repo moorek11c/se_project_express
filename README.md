@@ -4,11 +4,8 @@
 
 [Backend Repository](https://github.com/moorek11c/se_project_express)
 
---frontend
-api.https://checkwtwtoday.crabdance.com/
-
---backend
-https://checkwtwtoday.crabdance.com/
+[Deployed Application frontend](https://checkwtwtoday.crabdance.com/)
+[Deployed Application backend](https://api.checkwtwtoday.crabdance.com/)
 
 ## Description
 
