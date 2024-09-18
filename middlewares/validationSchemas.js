@@ -15,7 +15,7 @@ const validateURL = (value, helpers) => {
 
 const validateId = celebrate({
   params: Joi.object().keys({
-    _id: Joi.string().hex().length(24).required().messages({
+    itemId: Joi.string().hex().length(24).required().messages({
       "string.hex": 'The "id" must be a valid hexadecimal string',
       "string.length": 'The "id" must be exactly 24 characters long',
       "any.required": 'The "id" field is required',

@@ -4,6 +4,12 @@
 
 [Backend Repository](https://github.com/moorek11c/se_project_express)
 
+--frontend
+api.https://checkwtwtoday.crabdance.com/
+
+--backend
+https://checkwtwtoday.crabdance.com/
+
 ## Description
 
 The WTWR (What to Wear?) back-end project is designed to provide a server for the WTWR application. This server facilitates user management and clothing item management through a RESTful API. Key functionalities include user creation, user deletion, user retrieval, as well as the ability to add, delete, like, and unlike clothing items.
