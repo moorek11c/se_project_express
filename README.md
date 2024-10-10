@@ -1,12 +1,5 @@
 # WTWR (What to Wear?) Back End
 
-[Frontend Repository](https://github.com/moorek11c/se_project_react)
-
-[Backend Repository](https://github.com/moorek11c/se_project_express)
-
-[Deployed Application frontend](https://checkwtwtoday.crabdance.com/)
-[Deployed Application backend](https://api.checkwtwtoday.crabdance.com/)
-
 ## Description
 
 The WTWR (What to Wear?) back-end project is designed to provide a server for the WTWR application. This server facilitates user management and clothing item management through a RESTful API. Key functionalities include user creation, user deletion, user retrieval, as well as the ability to add, delete, like, and unlike clothing items.
@@ -20,21 +13,42 @@ The WTWR (What to Wear?) back-end project is designed to provide a server for th
   - Retrieve all users
 
 - **Clothing Item Management**:
+
   - Add a new clothing item
   - Delete a clothing item
   - Like a clothing item
   - Unlike a clothing item
 
-## Technologies Used
+  ## link to repository
 
-- **MongoDB**: A NoSQL database used for storing user and clothing item data.
-- **Express.js**: A web application framework for Node.js that provides robust routing and middleware capabilities.
-- **Error Handling**: Implemented using a custom `errorHandler` middleware in the main entry point to manage and respond to errors effectively.
+  [Backend Repository](https://github.com/moorek11c/se_project_express)
 
 ## Running the Project
 
-To start the server, use the following command:
+To run the project, follow these steps:
+
+1. Clone the repository to your local machine
 
 ```bash
-npm run start
+
+git clone
+
 ```
+
+2. Install the project dependencies
+
+```bash
+
+npm install
+
+```
+
+3. Start the server
+
+```bash
+
+npm start
+
+```
+
+4. The server will be running on `http://localhost:3000`
